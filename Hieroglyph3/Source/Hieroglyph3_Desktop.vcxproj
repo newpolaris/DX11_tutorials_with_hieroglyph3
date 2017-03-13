@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -475,7 +475,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -526,10 +526,10 @@ copy Animation\*.inl ..\SDK\Include\
 MD ..\..\Tutorials\bin 
 if "$(Platform)" == "Win32" (
     echo "Hieroglyph3: Copying x86 version of D3DCompile*.dll to output bin folder."
-    copy “$(WindowsSdkDir)redist\d3d\x86\D3DCompile*.DLL” “..\..\Tutorials\bin\”
+    copy "$(WindowsSdkDir)redist\d3d\x86\D3DCompile*.DLL" "..\..\Tutorials\bin\”
 ) else (
     echo "Hieroglyph3: Copying x64 version of D3DCompile*.dll to output bin folder."
-    copy “$(WindowsSdkDir)redist\d3d\x64\D3DCompile*.DLL” “..\..\Tutorials\bin\”
+    copy "$(WindowsSdkDir)redist\d3d\x64\D3DCompile*.DLL" "..\..\Tutorials\bin\"
 )</Command>
     </PostBuildEvent>
     <Lib>
