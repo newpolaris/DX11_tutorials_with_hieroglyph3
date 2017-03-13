@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hieroglyph3_Desktop", "Hieroglyph3\Source\Hieroglyph3_Desktop.vcxproj", "{0F6D257E-70D5-46C5-8A12-7BDF93C35E81}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -127,6 +127,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial_09_mrt", "Tutorial
 		{0F6D257E-70D5-46C5-8A12-7BDF93C35E81} = {0F6D257E-70D5-46C5-8A12-7BDF93C35E81}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial_10_TexturedCube", "Tutorials\Tutorial_10_TexturedCube\Tutorial_10_TexturedCube.vcxproj", "{4C65884A-BF46-4A49-B9CC-5A4D4A883B0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -207,6 +209,13 @@ Global
 		{7EB456E0-B0C6-4084-908A-F34F5E4050CF}.Release|Win32.ActiveCfg = Debug|Win32
 		{7EB456E0-B0C6-4084-908A-F34F5E4050CF}.Release|Win32.Build.0 = Debug|Win32
 		{7EB456E0-B0C6-4084-908A-F34F5E4050CF}.Release|x64.ActiveCfg = Debug|Win32
+		{4C65884A-BF46-4A49-B9CC-5A4D4A883B0A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4C65884A-BF46-4A49-B9CC-5A4D4A883B0A}.Debug|Win32.Build.0 = Debug|Win32
+		{4C65884A-BF46-4A49-B9CC-5A4D4A883B0A}.Debug|x64.ActiveCfg = Debug|Win32
+		{4C65884A-BF46-4A49-B9CC-5A4D4A883B0A}.Release|Win32.ActiveCfg = Debug|Win32
+		{4C65884A-BF46-4A49-B9CC-5A4D4A883B0A}.Release|Win32.Build.0 = Debug|Win32
+		{4C65884A-BF46-4A49-B9CC-5A4D4A883B0A}.Release|x64.ActiveCfg = Debug|Win32
+		{4C65884A-BF46-4A49-B9CC-5A4D4A883B0A}.Release|x64.Build.0 = Debug|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
