@@ -79,20 +79,20 @@ void GeometryDX11::AddElement( VertexElementDX11* element )
 	}
 }
 //--------------------------------------------------------------------------------
-void GeometryDX11::AddFace( TriangleIndices& face )
+void GeometryDX11::AddFace( const TriangleIndices& face )
 {
 	m_vIndices.push_back( face.i1 );
 	m_vIndices.push_back( face.i2 );
 	m_vIndices.push_back( face.i3 );
 }
 //--------------------------------------------------------------------------------
-void GeometryDX11::AddLine( LineIndices& line )
+void GeometryDX11::AddLine( const LineIndices& line )
 {
 	m_vIndices.push_back( line.i1 );
 	m_vIndices.push_back( line.i2 );
 }
 //--------------------------------------------------------------------------------
-void GeometryDX11::AddPoint( PointIndices& point )
+void GeometryDX11::AddPoint( const PointIndices& point )
 {
 	m_vIndices.push_back( point.i1 );
 }
