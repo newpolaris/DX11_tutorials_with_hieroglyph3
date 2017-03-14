@@ -12,6 +12,8 @@
 #include "Texture2dConfigDX11.h"
 #include "GeometryGeneratorDX11.h"
 #include "GeometryActor.h"
+#include "PointLight.h"
+#include "RotationController.h"
 
 using namespace Glyph3;
 
@@ -29,6 +31,12 @@ public:
 	virtual std::wstring GetName();
 
 protected:
+	PointLight*					m_pLight;
+	GeometryActor*				m_pIndexedActor;
+	GeometryActor*				m_pGeometryActor;
+	TextActor*					m_pTextActor;
+	Actor*						m_pMeshActor;
+	GeometryActor*				m_pTextureActor;
 };
 
 //--------------------------------------------------------------------------------
@@ -65,12 +73,30 @@ void App::Initialize()
 
 	m_pCamera->Spatial().SetRotation( Vector3f( 0.5f, 0.3f, 0.0f ) );
 	m_pCamera->Spatial().SetTranslation( Vector3f( -3.0f, 12.0f, -15.0f ) );
+	m_pRenderView->SetColorClearValue( Vector4f( 0.2f, 0.2f, 0.4f, 0.0f ) );
 
-	auto actor = new GeometryActor();
-	actor->DrawBox(Vector3f(0.0f, 3.0f, 0.0f), Vector3f(1.0f, 1.0f, 1.0f));
-	actor->UseTexturedMaterial( m_pRenderer11->LoadTexture( L"EyeOfHorus_128.png" ) );
-	m_pScene->AddActor(actor);
+	m_pGeometryActor = new GeometryActor();
+	m_pScene->AddActor( m_pGeometryActor );
+	m_pGeometryActor->GetNode()->Transform.Position() = Vector3f( 0.0f, 2.5f, 0.0f );
+
+	m_pGeometryActor->UseTransparentMaterial();
+	m_pGeometryActor->SetDiffuse( Vector4f( 1.0f, 1.0f, 1.0f, 1.0f ) );
+	m_pGeometryActor->SetColor( Vector4f( 1.0f, 0.0f, 0.0f, 0.5f ) );
+	m_pGeometryActor->UseTexturedMaterial( m_pRenderer11->LoadTexture( L"EyeOfHorus.png" ) );
+	m_pGeometryActor->DrawBox( Vector3f( 0.0f, 0.0f, 0.0f ), Vector3f( 3.0f, 3.0f, 3.0f ) );
+
+	RotationController<Node3D>* pGeometryRotController = new RotationController<Node3D>( Vector3f( 0.0f, 1.0f, 0.0f ), 0.4f );
+	m_pGeometryActor->GetNode()->Controllers.Attach( pGeometryRotController );
+
+	// Add a single point light to the scene.
+	m_pLight = new PointLight();
+	m_pScene->AddLight( m_pLight );
+
+	m_pLight->GetNode()->Controllers.Attach( new RotationController<Node3D>( Vector3f( 0.0f, 1.0f, 0.0f ), -1.0f ) );
+	m_pLight->GetNode()->Transform.Position() = Vector3f( 0.0f, 50.0f, 0.0f );
+	m_pLight->GetBody()->Transform.Position() = Vector3f( 50.0f, 0.0f, 0.0f );
 }
+
 void App::Update()
 {
 	m_pTimer->Update();
