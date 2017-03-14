@@ -28,7 +28,7 @@ TwoPassRenderer::TwoPassRenderer(RendererDX11 & Renderer, ResourcePtr RenderTarg
 
 	//m_pFirstPassView = new ViewPerspective(Renderer, m_firstPassTarget, m_DepthTarget);
 	m_pFirstPassView = new FirstPassView(Renderer, m_firstPassTarget, m_DepthTarget);
-	m_pFirstPassView->SetBackColor(Vector4f(0.6f, 0.6f, 0.9f, 1.0f));
+	m_pFirstPassView->SetColorClearValue(Vector4f(0.6f, 0.6f, 0.9f, 1.0f));
 
 	m_pTextureParam = Renderer.m_pParamMgr->GetShaderResourceParameterRef(std::wstring(L"ImageTexture"));
 	// multithreading enabled, so set once is enough

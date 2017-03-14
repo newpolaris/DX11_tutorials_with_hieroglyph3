@@ -53,7 +53,7 @@ void rotate_box::Initialize()
 {
 	SetMultiThreadedMode(false);
 	m_pCamera->Spatial().SetTranslation(Vector3f(0.0f, 0.0f, -5.0f));
-	m_pRenderView->SetBackColor(Vector4f(0.0f, 0.0f, 0.2f, 1.0f));
+	m_pRenderView->SetColorClearValue(Vector4f(0.0f, 0.0f, 0.2f, 1.0f));
 
 	m_pEffect = new RenderEffectDX11();
 	m_pEffect->SetVertexShader(m_pRenderer11->LoadShader(VERTEX_SHADER,

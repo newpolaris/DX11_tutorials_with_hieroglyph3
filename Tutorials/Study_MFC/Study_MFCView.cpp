@@ -113,7 +113,7 @@ void CStudy_MFCView::OnInitialUpdate()
 	// Create and configure the render views for use in our camera.
 
 	m_pPerspectiveView = new Glyph3::ViewPerspective(*pRenderer, /*m_OffscreenTexture*/ m_RenderTarget, m_DepthTarget);
-	m_pPerspectiveView->SetBackColor(Glyph3::Vector4f(0.6f, 0.6f, 0.9f, 1.0f));
+	m_pPerspectiveView->SetColorClearValue(Glyph3::Vector4f(0.6f, 0.6f, 0.9f, 1.0f));
 
 	pTextOverlayView = new Glyph3::ViewTextOverlay(*pRenderer, m_RenderTarget);
 
