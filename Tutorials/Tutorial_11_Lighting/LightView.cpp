@@ -15,10 +15,6 @@ void LightView::ExecuteTask(PipelineManagerDX11* pPipelineManager, IParameterMan
 {
 	// unbind the shader resource view, it is not necessary if the renderer is running in multithreading mode (default)
 	// pPipelineManager->ClearPipelineState();
-
-    Vector4f cameraPos( m_pScene->GetRoot()->Transform.Position(), 1.0f );
-    pParamManager->SetVectorParameter( L"gEyePosW", &cameraPos );
-
 	ViewPerspective::ExecuteTask(pPipelineManager, pParamManager);
 }
 

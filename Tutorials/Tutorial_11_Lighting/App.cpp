@@ -70,7 +70,7 @@ void App::ShutdownEngineComponents()
 }
 
 // Shader vertex, matrix data is stored in each thread slot (ex: GetValueID( threadID ))
-// Each contant buffer parameters are can be updated properly only
+// Each contant buffer parameters are can be updated properly in
 // 1. before shader init (all thread slot updated)
 // 2. In each thread execute (in each task's ExecuteTask function)
 bool App::ConfigureRenderingSetup()
@@ -110,15 +110,6 @@ void App::Initialize()
 	// from the camera's point of view of the scene.
 	m_pCamera->Spatial().SetRotation(Vector3f(0.5f, 0.3f, 0.0f));
 	m_pCamera->Spatial().SetTranslation(Vector3f(-3.0f, 12.0f, -15.0f));
-
-	Vector4f fresnelR0_Roughness { 0.001f, 0.001f, 0.001f, 0.f };
-	m_pRenderer11->m_pParamMgr->SetVectorParameter( L"gFresnelR0_Roughness", &fresnelR0_Roughness );
-
-	Vector4f AmbientLight { 0.25f, 0.25f, 0.35f, 1.0f };
-    m_pRenderer11->m_pParamMgr->SetVectorParameter( L"gAmbientLight", &AmbientLight );
-	
-	Vector4f albedo { 1.f, 1.f, 1.f, 1.f };
-	m_pRenderer11->m_pParamMgr->SetVectorParameter( L"gDiffuseAlbedo", &albedo );
 
 	auto pEffect = new RenderEffectDX11();
 	pEffect->SetVertexShader(m_pRenderer11->LoadShader(VERTEX_SHADER,
@@ -217,10 +208,19 @@ void App::Initialize()
 	pEntity->Visual.SetMaterial(m_pMaterial);		// must use a pointer here, not a reference
 	pEntity->Transform.Position() = Vector3f(0.0f, 0.0f, 0.0f);
 
+	// Lazy updated in ExecuteTask
+	pEntity->Parameters.SetVectorParameter( L"gFresnelR0_Roughness", { 0.001f, 0.001f, 0.001f, 0.f } );
+    pEntity->Parameters.SetVectorParameter( L"gAmbientLight", { 0.25f, 0.25f, 0.35f, 1.0f } );
+	pEntity->Parameters.SetVectorParameter( L"gDiffuseAlbedo", { 1.f, 1.f, 1.f, 1.f } );
+	
 	auto actor = new Actor();
 	actor->GetNode()->AttachChild(pEntity);
 	actor->GetNode()->Controllers.Attach( new RotationController<Node3D>( Vector3f( 0.0f, 1.0f, 0.0f ), -1.0f ) );
 	m_pScene->AddActor(actor);
+
+	// Parameters are updated in InitRenderParams for all thread slot
+    Vector4f cameraPos( m_pScene->GetRoot()->Transform.Position(), 1.0f );
+    m_pScene->Parameters.SetVectorParameter( L"gEyePosW", cameraPos );
 }
 
 void App::Update()
