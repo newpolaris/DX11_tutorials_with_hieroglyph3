@@ -116,6 +116,22 @@ ShaderReflectionDX11* ShaderReflectionFactoryDX11::GenerateReflection( ShaderDX1
 				{
 					pParam = pParamMgr->GetVectorParameterRef( GlyphString::ToUnicode( std::string( var_desc.Name ) ) );
 				}
+				else if (type_desc.Class == D3D_SVC_SCALAR)
+				{
+					// scalar array is not supported.
+					assert(type_desc.Elements == 0);
+					pParam = pParamMgr->GetScalarParameterRef( GlyphString::ToUnicode( std::string( var_desc.Name ) ) );
+				}
+				else if (type_desc.Class == D3D_SVC_STRUCT)
+				{
+					unsigned int count = type_desc.Elements;
+					// non struct array is not supported
+					if (count == 0)
+						count = 1;
+					assert(var_desc.Size % count == 0);
+					unsigned int size = var_desc.Size / count;
+					pParam = pParamMgr->GetStructArrayParameterRef( GlyphString::ToUnicode( std::string( var_desc.Name ) ), size, count );
+				}
 				else if ( ( type_desc.Class == D3D_SVC_MATRIX_ROWS ) ||
 							( type_desc.Class == D3D_SVC_MATRIX_COLUMNS ) )
 				{

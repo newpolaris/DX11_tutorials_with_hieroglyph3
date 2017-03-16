@@ -157,6 +157,8 @@
     <ClCompile Include="SamplerParameterDX11.cpp" />
     <ClCompile Include="SamplerParameterWriterDX11.cpp" />
     <ClCompile Include="SamplerStateConfigDX11.cpp" />
+    <ClCompile Include="ScalarParameterDX11.cpp" />
+    <ClCompile Include="ScalarParameterWriterDX11.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
     <ClCompile Include="SceneRenderTask.cpp" />
@@ -184,6 +186,8 @@
     <ClCompile Include="SpriteVertexDX11.cpp" />
     <ClCompile Include="StreamOutputStageDX11.cpp" />
     <ClCompile Include="StreamOutputStageStateDX11.cpp" />
+    <ClCompile Include="StructArrayParameterDX11.cpp" />
+    <ClCompile Include="StructArrayParameterWriterDX11.cpp" />
     <ClCompile Include="StructuredBufferDX11.cpp" />
     <ClCompile Include="SwapChainConfigDX11.cpp" />
     <ClCompile Include="SwapChainDX11.cpp" />
@@ -382,6 +386,8 @@
     <ClInclude Include="..\Include\SamplerParameterDX11.h" />
     <ClInclude Include="..\Include\SamplerParameterWriterDX11.h" />
     <ClInclude Include="..\Include\SamplerStateConfigDX11.h" />
+    <ClInclude Include="..\Include\ScalarParameterDX11.h" />
+    <ClInclude Include="..\Include\ScalarParameterWriterDX11.h" />
     <ClInclude Include="..\Include\ScaleSetpointController.h" />
     <ClInclude Include="..\Include\Scene.h" />
     <ClInclude Include="..\Include\SceneGraph.h" />
@@ -415,6 +421,8 @@
     <ClInclude Include="..\Include\StatefulSetpointController.h" />
     <ClInclude Include="..\Include\StreamOutputStageDX11.h" />
     <ClInclude Include="..\Include\StreamOutputStageStateDX11.h" />
+    <ClInclude Include="..\Include\StructArrayParameterDX11.h" />
+    <ClInclude Include="..\Include\StructArrayParameterWriterDX11.h" />
     <ClInclude Include="..\Include\StructuredBufferDX11.h" />
     <ClInclude Include="..\Include\SwapChainConfigDX11.h" />
     <ClInclude Include="..\Include\SwapChainDX11.h" />

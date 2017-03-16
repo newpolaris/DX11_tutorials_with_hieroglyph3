@@ -19,10 +19,12 @@
 #include "ConstantBufferParameterDX11.h"
 #include "MatrixParameterDX11.h"
 #include "MatrixArrayParameterDX11.h"
+#include "StructArrayParameterDX11.h"
 #include "SamplerParameterDX11.h"
 #include "ShaderResourceParameterDX11.h"
 #include "UnorderedAccessParameterDX11.h"
 #include "VectorParameterDX11.h"
+#include "ScalarParameterDX11.h"
 //--------------------------------------------------------------------------------
 namespace Glyph3
 {
@@ -40,6 +42,7 @@ namespace Glyph3
 		// during rendering.
 
 		//virtual void SetParameter( RenderParameterDX11* pParameter ) = 0;
+		virtual void SetScalarParameter( const std::wstring& name, FScalar* pVector ) = 0;
 		virtual void SetVectorParameter( const std::wstring& name, Vector4f* pVector ) = 0;
 		virtual void SetMatrixParameter( const std::wstring& name, Matrix4f* pMatrix ) = 0;
 		virtual void SetSamplerParameter( const std::wstring& name, int* pID ) = 0;
@@ -47,7 +50,9 @@ namespace Glyph3
 		virtual void SetUnorderedAccessParameter( const std::wstring& name, ResourcePtr resource, unsigned int initial = -1 ) = 0;
 		virtual void SetConstantBufferParameter( const std::wstring& name, ResourcePtr resource ) = 0;
 		virtual void SetMatrixArrayParameter( const std::wstring& name, int count, Matrix4f* pMatrices ) = 0;
+		virtual void SetStructArrayParameter( const std::wstring& name, int size, int count, void* pData ) = 0;
 		
+		virtual void SetScalarParameter( RenderParameterDX11* pParameter, FScalar* pVector ) = 0;
 		virtual void SetVectorParameter( RenderParameterDX11* pParameter, Vector4f* pVector ) = 0;
 		virtual void SetMatrixParameter( RenderParameterDX11* pParameter, Matrix4f* pMatrix ) = 0;
 		virtual void SetSamplerParameter( RenderParameterDX11* pParameter, int* pID ) = 0;
@@ -55,8 +60,10 @@ namespace Glyph3
 		virtual void SetUnorderedAccessParameter( RenderParameterDX11* pParameter, ResourcePtr resource, unsigned int initial = -1 ) = 0;
 		virtual void SetConstantBufferParameter( RenderParameterDX11* pParameter, ResourcePtr resource ) = 0;
 		virtual void SetMatrixArrayParameter( RenderParameterDX11* pParameter, int count, Matrix4f* pMatrices ) = 0;
+		virtual void SetStructArrayParameter( RenderParameterDX11* pParameter, int size, int count, void* pData ) = 0;
 
 		virtual RenderParameterDX11* GetParameterRef( const std::wstring& name ) = 0;
+		virtual ScalarParameterDX11* GetScalarParameterRef( const std::wstring& name ) = 0;
 		virtual VectorParameterDX11* GetVectorParameterRef( const std::wstring& name ) = 0;
 		virtual MatrixParameterDX11* GetMatrixParameterRef( const std::wstring& name ) = 0;
 		virtual ShaderResourceParameterDX11* GetShaderResourceParameterRef( const std::wstring& name ) = 0;
@@ -64,10 +71,12 @@ namespace Glyph3
 		virtual ConstantBufferParameterDX11* GetConstantBufferParameterRef( const std::wstring& name ) = 0;
 		virtual SamplerParameterDX11* GetSamplerStateParameterRef( const std::wstring& name ) = 0;
 		virtual MatrixArrayParameterDX11* GetMatrixArrayParameterRef( const std::wstring& name, int count ) = 0;
+		virtual StructArrayParameterDX11* GetStructArrayParameterRef( const std::wstring& name, int size, int count ) = 0;
 
 		// Each of the parameter types can also be accessed to inspect their current
 		// value prior to setting them.
 
+		virtual FScalar GetScalarParameter( RenderParameterDX11* pParameter ) = 0;
 		virtual Vector4f GetVectorParameter( RenderParameterDX11* pParameter ) = 0;
 		virtual Matrix4f GetMatrixParameter( RenderParameterDX11* pParameter ) = 0;
 		virtual int GetShaderResourceParameter( RenderParameterDX11* pParameter ) = 0;
@@ -75,7 +84,9 @@ namespace Glyph3
 		virtual int GetConstantBufferParameter( RenderParameterDX11* pParameter ) = 0;
 		virtual int GetSamplerStateParameter( RenderParameterDX11* pParameter ) = 0;
 		virtual Matrix4f* GetMatrixArrayParameter( RenderParameterDX11* pParameter ) = 0;
+		virtual void* GetStructArrayParameter( RenderParameterDX11* pParameter ) = 0;
 
+		virtual FScalar GetScalarParameter( const std::wstring& name ) = 0;
 		virtual Vector4f GetVectorParameter( const std::wstring& name ) = 0;
 		virtual Matrix4f GetMatrixParameter( const std::wstring& name ) = 0;
 		virtual int GetShaderResourceParameter( const std::wstring& name ) = 0;
@@ -83,6 +94,7 @@ namespace Glyph3
 		virtual int GetConstantBufferParameter( const std::wstring& name ) = 0;
 		virtual int GetSamplerStateParameter( const std::wstring& name ) = 0;
 		virtual Matrix4f* GetMatrixArrayParameter( const std::wstring& name, int count ) = 0;
+		virtual void* GetStructArrayParameter( const std::wstring& name, int size, int count ) = 0;
 
 		// The following matrix parameters are set with specialized functions to allow
 		// the renderer to calculate the concatenated matrices.

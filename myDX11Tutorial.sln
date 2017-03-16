@@ -136,6 +136,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tutorial_11_Lighting", "Tut
 	ProjectSection(ProjectDependencies) = postProject
 		{0F6D257E-70D5-46C5-8A12-7BDF93C35E81} = {0F6D257E-70D5-46C5-8A12-7BDF93C35E81}
 	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestParameterSystem", "Tutorials\TestParameterSystem\TestParameterSystem.vcxproj", "{866A58A1-F8D3-4393-9836-7A4F4D2E621F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -235,6 +236,13 @@ Global
 		{9F4BA645-A87C-4E13-9A35-14F4CA69E4EA}.Release|Win32.Build.0 = Debug|Win32
 		{9F4BA645-A87C-4E13-9A35-14F4CA69E4EA}.Release|x64.ActiveCfg = Debug|Win32
 		{9F4BA645-A87C-4E13-9A35-14F4CA69E4EA}.Release|x64.Build.0 = Debug|Win32
+		{866A58A1-F8D3-4393-9836-7A4F4D2E621F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{866A58A1-F8D3-4393-9836-7A4F4D2E621F}.Debug|Win32.Build.0 = Debug|Win32
+		{866A58A1-F8D3-4393-9836-7A4F4D2E621F}.Debug|x64.ActiveCfg = Debug|Win32
+		{866A58A1-F8D3-4393-9836-7A4F4D2E621F}.Release|Win32.ActiveCfg = Debug|Win32
+		{866A58A1-F8D3-4393-9836-7A4F4D2E621F}.Release|Win32.Build.0 = Debug|Win32
+		{866A58A1-F8D3-4393-9836-7A4F4D2E621F}.Release|x64.ActiveCfg = Debug|Win32
+		{866A58A1-F8D3-4393-9836-7A4F4D2E621F}.Release|x64.Build.0 = Debug|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

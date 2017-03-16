@@ -96,6 +96,12 @@ void ConstantBufferDX11::EvaluateMappings( PipelineManagerDX11* pPipeline, IPara
 						Vector4f* pBuf = (Vector4f*)((char*)resource.pData + offset);
 						*pBuf = vector;
 					}
+					else if ( m_Mappings[j].varclass == D3D_SVC_SCALAR )
+					{
+						FScalar scalar = pParamManager->GetScalarParameter( pParam );
+						FScalar* pScalar = (FScalar*)((char*)resource.pData + offset);
+						*pScalar = scalar;
+					}
 					else if ( ( m_Mappings[j].varclass == D3D_SVC_MATRIX_ROWS ) ||
 						( m_Mappings[j].varclass == D3D_SVC_MATRIX_COLUMNS ) )
 					{
@@ -115,6 +121,20 @@ void ConstantBufferDX11::EvaluateMappings( PipelineManagerDX11* pPipeline, IPara
 							} else {
 								Log::Get().Write( L"Mismatch in matrix array count, update will not be performed!!!" );
 							}
+						}
+					}
+					else if ( m_Mappings[j].varclass == D3D_SVC_STRUCT )
+					{
+						assert(pParam->GetParameterType() == STRUCT_ARRAY);
+						auto pStruct = reinterpret_cast<StructArrayParameterDX11*>(pParam);
+						assert(pStruct->GetCount() <= (int)elements);
+						assert(pStruct->GetSize() == (int)size/elements);
+						if (pStruct->GetCount() <= elements && pStruct->GetSize() == size/elements) {
+							auto pData = pParamManager->GetStructArrayParameter(pParam);
+							auto iLength = pStruct->GetCount() * pStruct->GetSize();
+							memcpy( ((char*)resource.pData + offset), (char*)pData, iLength);
+						} else {
+							Log::Get().Write( L"Mismatch in matrix array count, update will not be performed!!!" );
 						}
 					} else {
 						Log::Get().Write( L"Non vector or matrix parameter specified in a constant buffer!  This will not be updated!" );
