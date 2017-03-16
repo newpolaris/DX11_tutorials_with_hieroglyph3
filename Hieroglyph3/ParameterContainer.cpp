@@ -168,6 +168,37 @@ MatrixParameterWriterDX11* ParameterContainer::GetMatrixParameterWriter( const s
 	return( pMatrixWriter );
 }
 //--------------------------------------------------------------------------------
+StructArrayParameterWriterDX11* ParameterContainer::GetStructArrayParameterWriter( const std::wstring& name )
+{
+	ParameterWriter* pWriter = nullptr;
+	StructArrayParameterWriterDX11* pStructWriter = nullptr;
+
+	// Check if the parameter already exists in this container.
+	pWriter = GetRenderParameter( name );
+
+	if ( nullptr != pWriter )
+	{
+		// The parameter is there, so now check its parameter type...
+		RenderParameterDX11* pParameter = pWriter->GetRenderParameterRef();
+
+		if ( nullptr != pParameter )
+		{
+			// If the type is correct, then set the value.
+			if ( pParameter->GetParameterType() == STRUCT_ARRAY ) {
+				pStructWriter = dynamic_cast<StructArrayParameterWriterDX11*>( pWriter );
+			} else {
+				Log::Get().Write( L"ERROR: Trying to access a matrix in a non-matrix parameter writer!!!" );
+			}
+		} else {
+			// Parameter was there, but didn't have a reference set so you can't tell what type it is.
+			// This shouldn't happen, so log an error if it does...
+			Log::Get().Write( L"ERROR: Trying to access a parameter writer without any reference set!!!" );
+		}
+	}
+
+	return( pStructWriter );
+}
+//--------------------------------------------------------------------------------
 SamplerParameterWriterDX11* ParameterContainer::GetSamplerParameterWriter( const std::wstring& name )
 {
 	ParameterWriter* pWriter = nullptr;
@@ -292,6 +323,37 @@ VectorParameterWriterDX11* ParameterContainer::GetVectorParameterWriter( const s
 	return( pVectorWriter );
 }
 //--------------------------------------------------------------------------------
+ScalarParameterWriterDX11* ParameterContainer::GetScalarParameterWriter( const std::wstring& name )
+{
+	ParameterWriter* pWriter = nullptr;
+	ScalarParameterWriterDX11* pScalarWriter = nullptr;
+
+	// Check if the parameter already exists in this container.
+	pWriter = GetRenderParameter( name );
+
+	if ( nullptr != pWriter )
+	{
+		// The parameter is there, so now check its parameter type...
+		RenderParameterDX11* pParameter = pWriter->GetRenderParameterRef();
+
+		if ( nullptr != pParameter )
+		{
+			// If the type is correct, then set the value.
+			if ( pParameter->GetParameterType() == SCALAR) {
+				pScalarWriter = dynamic_cast<ScalarParameterWriterDX11*>( pWriter );
+			} else {
+				Log::Get().Write( L"ERROR: Trying to access a vector in a non-vector parameter writer!!!" );
+			}
+		} else {
+			// Parameter was there, but didn't have a reference set so you can't tell what type it is.
+			// This shouldn't happen, so log an error if it does...
+			Log::Get().Write( L"ERROR: Trying to access a parameter writer without any reference set!!!" );
+		}
+	}
+
+	return( pScalarWriter );
+}
+//--------------------------------------------------------------------------------
 void ParameterContainer::SetRenderParams( IParameterManager* pParamManager )
 {
 	// Scroll through each parameter and set it in the provided parameter manager.
@@ -340,6 +402,26 @@ MatrixArrayParameterWriterDX11* ParameterContainer::SetMatrixArrayParameter( con
 	pMatrixArrayWriter->SetValue( values );
 
 	return( pMatrixArrayWriter );
+}
+//--------------------------------------------------------------------------------
+StructArrayParameterWriterDX11* ParameterContainer::SetStructArrayParameter( const std::wstring& name, int size, int count, void* values )
+{
+	// Check if the parameter already exists in this container
+	StructArrayParameterWriterDX11* pStructArrayWriter = GetStructArrayParameterWriter( name );
+	// If not, then create one...
+	if ( nullptr == pStructArrayWriter ) {
+		pStructArrayWriter = new StructArrayParameterWriterDX11();
+		pStructArrayWriter->SetRenderParameterRef( RendererDX11::Get()->m_pParamMgr->GetStructArrayParameterRef( name, size, count ) );
+		AddRenderParameter( pStructArrayWriter );
+	} else {
+		assert(pStructArrayWriter->GetCount() == count);
+		assert(pStructArrayWriter->GetSize() == size);
+	}
+
+	// ... and set the value.
+	pStructArrayWriter->SetValue( values );
+
+	return( pStructArrayWriter );
 }
 //--------------------------------------------------------------------------------
 MatrixParameterWriterDX11* ParameterContainer::SetMatrixParameter( const std::wstring& name, const Matrix4f& value )
@@ -430,5 +512,23 @@ VectorParameterWriterDX11* ParameterContainer::SetVectorParameter( const std::ws
 	pVectorWriter->SetValue( value );
 
 	return( pVectorWriter );
+}
+//--------------------------------------------------------------------------------
+ScalarParameterWriterDX11* ParameterContainer::SetScalarParameter( const std::wstring& name, const FScalar& value )
+{
+	// Check if the parameter already exists in this container
+	ScalarParameterWriterDX11* pScalarWriter = GetScalarParameterWriter( name );
+
+	// If not, then create one...
+	if ( nullptr == pScalarWriter ) {
+		pScalarWriter = new ScalarParameterWriterDX11();
+		pScalarWriter->SetRenderParameterRef( RendererDX11::Get()->m_pParamMgr->GetScalarParameterRef( name ) );
+		AddRenderParameter( pScalarWriter );
+	}
+
+	// ... and set the value.
+	pScalarWriter->SetValue( value );
+
+	return( pScalarWriter );
 }
 //--------------------------------------------------------------------------------

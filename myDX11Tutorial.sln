@@ -132,6 +132,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hieroglyph3_Desktop", "Hier
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LuaLib", "Dependencies\lua-5.1.4\LuaLib\LuaLib.vcxproj", "{E252E0D3-A52B-447F-A108-647F9C52AE33}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestParameterSystem", "Tutorials\TestParameterSystem\TestParameterSystem.vcxproj", "{866A58A1-F8D3-4393-9836-7A4F4D2E621F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -223,6 +225,13 @@ Global
 		{E252E0D3-A52B-447F-A108-647F9C52AE33}.Release|Win32.Build.0 = Release|Win32
 		{E252E0D3-A52B-447F-A108-647F9C52AE33}.Release|x64.ActiveCfg = Release|x64
 		{E252E0D3-A52B-447F-A108-647F9C52AE33}.Release|x64.Build.0 = Release|x64
+		{866A58A1-F8D3-4393-9836-7A4F4D2E621F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{866A58A1-F8D3-4393-9836-7A4F4D2E621F}.Debug|Win32.Build.0 = Debug|Win32
+		{866A58A1-F8D3-4393-9836-7A4F4D2E621F}.Debug|x64.ActiveCfg = Debug|Win32
+		{866A58A1-F8D3-4393-9836-7A4F4D2E621F}.Release|Win32.ActiveCfg = Debug|Win32
+		{866A58A1-F8D3-4393-9836-7A4F4D2E621F}.Release|Win32.Build.0 = Debug|Win32
+		{866A58A1-F8D3-4393-9836-7A4F4D2E621F}.Release|x64.ActiveCfg = Debug|Win32
+		{866A58A1-F8D3-4393-9836-7A4F4D2E621F}.Release|x64.Build.0 = Debug|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

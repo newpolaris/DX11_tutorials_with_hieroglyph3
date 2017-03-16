@@ -32,6 +32,7 @@ namespace Glyph3
 		// a new one and initialize all of the available slots to the provided data.
 
 		//void SetParameter( RenderParameterDX11* pParameter );
+		void SetScalarParameter( const std::wstring& name, FScalar* pScalar );
 		void SetVectorParameter( const std::wstring& name, Vector4f* pVector );
 		void SetMatrixParameter( const std::wstring& name, Matrix4f* pMatrix );
 		void SetSamplerParameter( const std::wstring& name, int* pID );
@@ -39,11 +40,13 @@ namespace Glyph3
 		void SetUnorderedAccessParameter( const std::wstring& name, ResourcePtr resource, unsigned int initial = -1 );
 		void SetConstantBufferParameter( const std::wstring& name, ResourcePtr resource );
 		void SetMatrixArrayParameter( const std::wstring& name, int count, Matrix4f* pMatrices );
+		void SetStructArrayParameter( const std::wstring& name, int size, int count, void* pData );
 
 		// Additionally, it is possible to set a value and provide the reference to the 
 		// parameter itself.  This eliminates the need to do a lookup of the parameter
 		// completely.
 
+		virtual void SetScalarParameter( RenderParameterDX11* pParameter, FScalar* pScalar );
 		virtual void SetVectorParameter( RenderParameterDX11* pParameter, Vector4f* pVector );
 		virtual void SetMatrixParameter( RenderParameterDX11* pParameter, Matrix4f* pMatrix );
 		virtual void SetSamplerParameter( RenderParameterDX11* pParameter, int* pID );
@@ -51,10 +54,12 @@ namespace Glyph3
 		virtual void SetUnorderedAccessParameter( RenderParameterDX11* pParameter, ResourcePtr resource, unsigned int initial = -1 );
 		virtual void SetConstantBufferParameter( RenderParameterDX11* pParameter, ResourcePtr resource );
 		virtual void SetMatrixArrayParameter( RenderParameterDX11* pParameter, int count, Matrix4f* pMatrices );
+		virtual void SetStructArrayParameter( RenderParameterDX11* pParameter, int size, int count, void* pData );
 
 		// References to parameters are acquired by simply querying for them by name.
 
 		virtual RenderParameterDX11* GetParameterRef( const std::wstring& name );
+		virtual ScalarParameterDX11* GetScalarParameterRef( const std::wstring& name );
 		virtual VectorParameterDX11* GetVectorParameterRef( const std::wstring& name );
 		virtual MatrixParameterDX11* GetMatrixParameterRef( const std::wstring& name );
 		virtual ShaderResourceParameterDX11* GetShaderResourceParameterRef( const std::wstring& name );
@@ -62,6 +67,7 @@ namespace Glyph3
 		virtual ConstantBufferParameterDX11* GetConstantBufferParameterRef( const std::wstring& name );
 		virtual SamplerParameterDX11* GetSamplerStateParameterRef( const std::wstring& name );
 		virtual MatrixArrayParameterDX11* GetMatrixArrayParameterRef( const std::wstring& name, int count );
+		virtual StructArrayParameterDX11* GetStructArrayParameterRef( const std::wstring& name, int size, int count );
 
 		// Each of the parameter types can also be accessed to inspect their current
 		// value prior to setting them.  Calling the get methods will create an empty 
@@ -69,6 +75,7 @@ namespace Glyph3
 		// generic render parameter pointer as well (which is used internally to the 
 		// engine).
 
+		FScalar GetScalarParameter( const std::wstring& name );
 		Vector4f GetVectorParameter( const std::wstring& name );
 		Matrix4f GetMatrixParameter( const std::wstring& name );
 		int GetShaderResourceParameter( const std::wstring& name );
@@ -76,7 +83,9 @@ namespace Glyph3
 		int GetConstantBufferParameter( const std::wstring& name );
 		int GetSamplerStateParameter( const std::wstring& name );
 		Matrix4f* GetMatrixArrayParameter( const std::wstring& name, int count );
+		void* GetStructArrayParameter( const std::wstring& name, int size, int count );
 
+		FScalar GetScalarParameter( RenderParameterDX11* pParameter );
 		Vector4f GetVectorParameter( RenderParameterDX11* pParameter );
 		Matrix4f GetMatrixParameter( RenderParameterDX11* pParameter );
 		int GetShaderResourceParameter( RenderParameterDX11* pParameter );
@@ -84,6 +93,7 @@ namespace Glyph3
 		int GetConstantBufferParameter( RenderParameterDX11* pParameter );
 		int GetSamplerStateParameter( RenderParameterDX11* pParameter );
 		Matrix4f* GetMatrixArrayParameter( RenderParameterDX11* pParameter );
+		void* GetStructArrayParameter( RenderParameterDX11* pParameter );
 
 
 		// The following matrix parameters are set with specialized functions to allow

@@ -818,6 +818,18 @@
     <ClCompile Include="ImageProcessor.cpp">
       <Filter>Rendering\Image Processing Toolkit</Filter>
     </ClCompile>
+    <ClCompile Include="ScalarParameterDX11.cpp">
+      <Filter>Rendering\Parameter System\Parameters</Filter>
+    </ClCompile>
+    <ClCompile Include="ScalarParameterWriterDX11.cpp">
+      <Filter>Rendering\Parameter System\Parameter Writers</Filter>
+    </ClCompile>
+    <ClCompile Include="StructArrayParameterDX11.cpp">
+      <Filter>Rendering\Parameter System\Parameters</Filter>
+    </ClCompile>
+    <ClCompile Include="StructArrayParameterWriterDX11.cpp">
+      <Filter>Rendering\Parameter System\Parameter Writers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Animation.h">
@@ -1536,6 +1548,18 @@
     </ClInclude>
     <ClInclude Include="..\Include\TStateCache.h">
       <Filter>Rendering\Resource System\State Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\ScalarParameterDX11.h">
+      <Filter>Rendering\Parameter System\Parameters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\ScalarParameterWriterDX11.h">
+      <Filter>Rendering\Parameter System\Parameter Writers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\StructArrayParameterDX11.h">
+      <Filter>Rendering\Parameter System\Parameters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\StructArrayParameterWriterDX11.h">
+      <Filter>Rendering\Parameter System\Parameter Writers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

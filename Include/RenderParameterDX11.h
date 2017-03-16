@@ -21,14 +21,16 @@ namespace Glyph3
 {
 	enum ParameterType
 	{
+		SCALAR,
 		VECTOR,
 		MATRIX,
 		MATRIX_ARRAY,
+		STRUCT_ARRAY,
 		SHADER_RESOURCE,
 		UNORDERED_ACCESS,
 		CBUFFER,
 		SAMPLER,
-		ENTITY
+		ENTITY,
 	};
 
 	class RenderParameterDX11

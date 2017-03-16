@@ -19,10 +19,13 @@
 #include "ConstantBufferParameterWriterDX11.h"
 #include "MatrixArrayParameterWriterDX11.h"
 #include "MatrixParameterWriterDX11.h"
+
 #include "SamplerParameterWriterDX11.h"
 #include "ShaderResourceParameterWriterDX11.h"
 #include "UnorderedAccessParameterWriterDX11.h"
 #include "VectorParameterWriterDX11.h"
+#include "ScalarParameterWriterDX11.h"
+#include "StructArrayParameterWriterDX11.h"
 //--------------------------------------------------------------------------------
 namespace Glyph3
 {
@@ -45,10 +48,12 @@ namespace Glyph3
 		ConstantBufferParameterWriterDX11* GetConstantBufferParameterWriter( const std::wstring& name );
 		MatrixArrayParameterWriterDX11* GetMatrixArrayParameterWriter( const std::wstring& name );
 		MatrixParameterWriterDX11* GetMatrixParameterWriter( const std::wstring& name );
+		StructArrayParameterWriterDX11* GetStructArrayParameterWriter( const std::wstring& name );
 		SamplerParameterWriterDX11* GetSamplerParameterWriter( const std::wstring& name );
 		ShaderResourceParameterWriterDX11* GetShaderResourceParameterWriter( const std::wstring& name );
 		UnorderedAccessParameterWriterDX11* GetUnorderedAccessParameterWriter( const std::wstring& name );
 		VectorParameterWriterDX11* GetVectorParameterWriter( const std::wstring& name );
+		ScalarParameterWriterDX11* GetScalarParameterWriter( const std::wstring& name );
 
 		// Setting values will add a parameter writer of the appropriate type to 
 		// this container.  This allows for easy setting of values without having to
@@ -56,10 +61,12 @@ namespace Glyph3
 		ConstantBufferParameterWriterDX11* SetConstantBufferParameter( const std::wstring& name, const ResourcePtr& value );
 		MatrixArrayParameterWriterDX11* SetMatrixArrayParameter( const std::wstring& name, Matrix4f* values, int count );
 		MatrixParameterWriterDX11* SetMatrixParameter( const std::wstring& name, const Matrix4f& value );
+		StructArrayParameterWriterDX11* SetStructArrayParameter( const std::wstring& name, int size, int count, void* values );
 		SamplerParameterWriterDX11* SetSamplerParameter( const std::wstring& name, int value );
 		ShaderResourceParameterWriterDX11* SetShaderResourceParameter( const std::wstring& name, const ResourcePtr& value );
 		UnorderedAccessParameterWriterDX11* SetUnorderedAccessParameter( const std::wstring& name, const ResourcePtr& value );
 		VectorParameterWriterDX11* SetVectorParameter( const std::wstring& name, const Vector4f& value );
+		ScalarParameterWriterDX11* SetScalarParameter( const std::wstring& name, const FScalar& value );
 
 		// Apply the parameters in this container to a parameter manager.
 		void SetRenderParams( IParameterManager* pParamManager );

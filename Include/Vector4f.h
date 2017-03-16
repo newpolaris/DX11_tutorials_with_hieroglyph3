@@ -18,6 +18,7 @@
 //----------------------------------------------------------------------------------------------------
 namespace Glyph3
 {
+	using FScalar = float;
 	class Vector2f;
     class Vector3f;
 

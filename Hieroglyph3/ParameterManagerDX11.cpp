@@ -18,6 +18,7 @@
 #include "UnorderedAccessParameterDX11.h"
 #include "ConstantBufferParameterDX11.h"
 #include "SamplerParameterDX11.h"
+#include "StructArrayParameterDX11.h"
 #include "Log.h"
 //--------------------------------------------------------------------------------
 using namespace Glyph3;
@@ -157,6 +158,29 @@ unsigned int ParameterManagerDX11::GetID()
 //	}
 //}
 //--------------------------------------------------------------------------------
+void ParameterManagerDX11::SetScalarParameter( const std::wstring& name, FScalar* pScalar )
+{
+	RenderParameterDX11* pParameter = m_Parameters[name];
+
+	// Only create the new parameter if it hasn't already been registered
+	if ( pParameter == 0 )
+	{
+		pParameter = new ScalarParameterDX11();
+		pParameter->SetName( name );
+		m_Parameters[name] = reinterpret_cast<RenderParameterDX11*>( pParameter );
+
+		// Initialize the parameter with the current data in all slots
+		pParameter->InitializeParameterData( reinterpret_cast<void*>( pScalar ) );
+	}
+	else
+	{
+		if ( pParameter->GetParameterType() == VECTOR )
+			pParameter->SetParameterData( reinterpret_cast<void*>( pScalar ), GetID() );
+		else
+			Log::Get().Write( L"Vector parameter name collision!" );
+	}
+}
+//--------------------------------------------------------------------------------
 void ParameterManagerDX11::SetVectorParameter( const std::wstring& name, Vector4f* pVector )
 {
 	RenderParameterDX11* pParameter = m_Parameters[name];
@@ -221,6 +245,29 @@ void ParameterManagerDX11::SetMatrixArrayParameter( const std::wstring& name, in
 	{
 		if ( pParameter->GetParameterType() == MATRIX_ARRAY )
 			pParameter->SetParameterData( reinterpret_cast<void*>( pMatrix ), GetID() );
+		else
+			Log::Get().Write( L"Matrix Array parameter name collision!" );
+	}
+}
+//--------------------------------------------------------------------------------
+void ParameterManagerDX11::SetStructArrayParameter( const std::wstring& name, int size, int count, void* pData )
+{
+	RenderParameterDX11* pParameter = m_Parameters[name];
+
+	// Only create the new parameter if it hasn't already been registered
+	if ( pParameter == 0 )
+	{
+		pParameter = new StructArrayParameterDX11( size, count );
+		pParameter->SetName( name );
+		m_Parameters[name] = reinterpret_cast<RenderParameterDX11*>( pParameter );
+
+		// Initialize the parameter with the current data in all slots
+		pParameter->InitializeParameterData( pData );
+	}
+	else
+	{
+		if ( pParameter->GetParameterType() == STRUCT_ARRAY )
+			pParameter->SetParameterData( pData, GetID() );
 		else
 			Log::Get().Write( L"Matrix Array parameter name collision!" );
 	}
@@ -327,6 +374,14 @@ void ParameterManagerDX11::SetSamplerParameter( const std::wstring& name, int* p
 	}
 }
 //--------------------------------------------------------------------------------
+void ParameterManagerDX11::SetScalarParameter( RenderParameterDX11* pParameter, FScalar* pScalar )
+{
+	if ( pParameter->GetParameterType() == SCALAR )
+		pParameter->SetParameterData( reinterpret_cast<void*>( pScalar ), GetID() );
+	else
+		Log::Get().Write( L"Vector parameter name collision!" );
+}
+//--------------------------------------------------------------------------------
 void ParameterManagerDX11::SetVectorParameter( RenderParameterDX11* pParameter, Vector4f* pVector )
 {
 	if ( pParameter->GetParameterType() == VECTOR )
@@ -347,6 +402,14 @@ void ParameterManagerDX11::SetMatrixArrayParameter( RenderParameterDX11* pParame
 {
 	if ( pParameter->GetParameterType() == MATRIX_ARRAY )
 		pParameter->SetParameterData( reinterpret_cast<void*>( pMatrix ), GetID() );
+	else
+		Log::Get().Write( L"Matrix Array parameter name collision!" );
+}
+//--------------------------------------------------------------------------------
+void ParameterManagerDX11::SetStructArrayParameter( RenderParameterDX11* pParameter, int size, int count, void* pData )
+{
+	if ( pParameter->GetParameterType() == STRUCT_ARRAY )
+		pParameter->SetParameterData( reinterpret_cast<void*>( pData ), GetID() );
 	else
 		Log::Get().Write( L"Matrix Array parameter name collision!" );
 }
@@ -386,6 +449,33 @@ void ParameterManagerDX11::SetSamplerParameter( RenderParameterDX11* pParameter,
 		pParameter->SetParameterData( reinterpret_cast<void*>( pID ), GetID() );
 	else
 		Log::Get().Write( L"Sampler parameter name collision!" );
+}
+//--------------------------------------------------------------------------------
+FScalar ParameterManagerDX11::GetScalarParameter( const std::wstring& name )
+{
+	FScalar result = 0;
+
+	// Check for the existence of this parameter.  This search includes any
+	// parent parameter managers if the parameter doesn't exist in this one.
+
+	RenderParameterDX11* pParam = GetParameterRef( name );
+
+	// If the parameter is not found, create a new default one.  This goes 
+	// into the bottom level manager.
+
+	if ( pParam != 0 )
+	{
+		if ( pParam->GetParameterType() == SCALAR ) 
+			result = reinterpret_cast<ScalarParameterDX11*>( pParam )->GetScalar( GetID() );
+	}
+	else
+	{
+		pParam = new ScalarParameterDX11();
+		pParam->SetName( name );
+		m_Parameters[name] = pParam;
+	}
+
+	return( result );
 }
 //--------------------------------------------------------------------------------
 Vector4f ParameterManagerDX11::GetVectorParameter( const std::wstring& name )
@@ -468,6 +558,35 @@ Matrix4f* ParameterManagerDX11::GetMatrixArrayParameter( const std::wstring& nam
 		pParam->SetName( name );
 		m_Parameters[name] = pParam;
 		pResult = reinterpret_cast<MatrixArrayParameterDX11*>( pParam )->GetMatrices( GetID() );
+	}
+
+	return( pResult );
+}
+//--------------------------------------------------------------------------------
+void* ParameterManagerDX11::GetStructArrayParameter( const std::wstring& name, int size, int count )
+{
+	void* pResult = 0;
+
+	// Check for the existence of this parameter.  This search includes any
+	// parent parameter managers if the parameter doesn't exist in this one.
+
+	RenderParameterDX11* pParam = GetParameterRef( name );
+
+	// If the parameter is not found, create a new default one.  This goes 
+	// into the bottom level manager.
+
+	if ( pParam != 0 )
+	{
+		if ( pParam->GetParameterType() == STRUCT_ARRAY ) 
+			if ( reinterpret_cast<StructArrayParameterDX11*>( pParam )->GetCount() == count )
+				pResult = reinterpret_cast<StructArrayParameterDX11*>( pParam )->GetData( GetID() );
+	}
+	else
+	{
+		pParam = new StructArrayParameterDX11( size, count );
+		pParam->SetName( name );
+		m_Parameters[name] = pParam;
+		pResult = reinterpret_cast<StructArrayParameterDX11*>( pParam )->GetData( GetID() );
 	}
 
 	return( pResult );
@@ -585,6 +704,21 @@ int ParameterManagerDX11::GetSamplerStateParameter( const std::wstring& name )
 	return( result );	
 }
 //--------------------------------------------------------------------------------
+FScalar ParameterManagerDX11::GetScalarParameter( RenderParameterDX11* pParam )
+{
+	assert( pParam != 0 );
+
+	FScalar result = 0.f;
+
+	// If the parameter is not found, create a new default one.  This goes 
+	// into the bottom level manager.
+
+	if ( pParam->GetParameterType() == SCALAR ) 
+		result = reinterpret_cast<ScalarParameterDX11*>( pParam )->GetScalar( GetID() );
+
+	return( result );
+}
+//--------------------------------------------------------------------------------
 Vector4f ParameterManagerDX11::GetVectorParameter( RenderParameterDX11* pParam )
 {
 	assert( pParam != 0 );
@@ -628,6 +762,21 @@ Matrix4f* ParameterManagerDX11::GetMatrixArrayParameter( RenderParameterDX11* pP
 
 	if ( pParam->GetParameterType() == MATRIX_ARRAY ) 
 		pResult = reinterpret_cast<MatrixArrayParameterDX11*>( pParam )->GetMatrices( GetID() );
+
+	return( pResult );
+}
+//--------------------------------------------------------------------------------
+void* ParameterManagerDX11::GetStructArrayParameter( RenderParameterDX11* pParam )
+{
+	assert( pParam != 0 );
+
+	void* pResult = 0;
+
+	// If the parameter is not found, create a new default one.  This goes 
+	// into the bottom level manager.
+
+	if ( pParam->GetParameterType() == STRUCT_ARRAY ) 
+		pResult = reinterpret_cast<StructArrayParameterDX11*>( pParam )->GetData( GetID() );
 
 	return( pResult );
 }
@@ -695,6 +844,26 @@ int ParameterManagerDX11::GetSamplerStateParameter( RenderParameterDX11* pParam 
 	return( result );	
 }
 //--------------------------------------------------------------------------------
+ScalarParameterDX11* ParameterManagerDX11::GetScalarParameterRef( const std::wstring& name )
+{
+	// Check for the existence of this parameter.  This search includes any
+	// parent parameter managers if the parameter doesn't exist in this one.
+
+	RenderParameterDX11* pParam = GetParameterRef( name );
+
+	// If the parameter is not found, create a new default one.  This goes 
+	// into the bottom level manager.
+
+	if ( pParam == 0 )
+	{
+		pParam = new ScalarParameterDX11();
+		pParam->SetName( name );
+		m_Parameters[name] = pParam;
+	}
+
+	return( reinterpret_cast<ScalarParameterDX11*>( pParam ) );
+}
+//--------------------------------------------------------------------------------
 VectorParameterDX11* ParameterManagerDX11::GetVectorParameterRef( const std::wstring& name )
 {
 	// Check for the existence of this parameter.  This search includes any
@@ -750,6 +919,27 @@ MatrixArrayParameterDX11* ParameterManagerDX11::GetMatrixArrayParameterRef( cons
 	}
 
 	return( reinterpret_cast<MatrixArrayParameterDX11*>( pParam ) );
+}
+//--------------------------------------------------------------------------------
+StructArrayParameterDX11* ParameterManagerDX11::GetStructArrayParameterRef( const std::wstring& name, int size, int count )
+{
+	RenderParameterDX11* pParam = GetParameterRef( name );
+
+	// If the parameter is not found, create a new default one.  This goes 
+	// into the bottom level manager.
+
+	if ( pParam == 0 )
+	{
+		pParam = new StructArrayParameterDX11( size, count );
+		pParam->SetName( name );
+		m_Parameters[name] = pParam;
+	}
+	else 
+	{
+		auto pStruct = reinterpret_cast<StructArrayParameterDX11*>(pParam);
+		assert( pStruct->GetSize() == size );
+	}
+	return( reinterpret_cast<StructArrayParameterDX11*>( pParam ) );
 }
 //--------------------------------------------------------------------------------
 ShaderResourceParameterDX11* ParameterManagerDX11::GetShaderResourceParameterRef( const std::wstring& name )
