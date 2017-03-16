@@ -93,8 +93,7 @@ void ConstantBufferDX11::EvaluateMappings( PipelineManagerDX11* pPipeline, IPara
 					if ( m_Mappings[j].varclass == D3D_SVC_VECTOR )
 					{
 						Vector4f vector = pParamManager->GetVectorParameter( pParam );
-						Vector4f* pBuf = (Vector4f*)((char*)resource.pData + offset);
-						*pBuf = vector;
+						memcpy(((char*)resource.pData + offset), (char*)&vector[0], size);
 					}
 					else if ( m_Mappings[j].varclass == D3D_SVC_SCALAR )
 					{
