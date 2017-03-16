@@ -62,9 +62,6 @@ float3 BlinnPhong(float3 lightStrength, float3 lightVec, float3 normal, float3 t
 //---------------------------------------------------------------------------------------
 float3 ComputeDirectionalLight(Light L, Material mat, float3 normal, float3 toEye)
 {
-	L.Direction = float3( 0.57735f, -0.57735f, 0.57735f );
-	L.Strength = float3( 0.8f, 0.8f, 0.8f );
-
     // The light vector aims opposite the direction the light rays travel.
     float3 lightVec = -L.Direction;
 
@@ -102,8 +99,8 @@ cbuffer cbPerObject : register(b0)
 cbuffer cbMaterial : register(b1)
 {
 	float4 gDiffuseAlbedo;
-	float4 gFresnelR0_Roughness;
-	// xyz, w
+	float3 gFresnelR0;
+	float  gRoughness;
 }
 
 cbuffer cbPass : register(b2)
@@ -111,7 +108,7 @@ cbuffer cbPass : register(b2)
     float4x4 ViewProjMatrix;
     float3 gEyePosW;
     float4 gAmbientLight;
-    // Light gLights[MaxLights];
+    Light gLights[MaxLights];
 };
 
 struct VS_INPUT
@@ -151,13 +148,10 @@ float4 PSMAIN(VS_OUT input) : SV_Target
 
 	// Indirect lighting.
 	float4 ambient = gAmbientLight*diffuseAlbedo;
-	float Roughness = gFresnelR0_Roughness.w;
-	const float shininess = 1.0f - Roughness;
+	const float shininess = 1.0f - gRoughness;
 
-	float3 gFresnelR0 = gFresnelR0_Roughness.xyz;
 	Material mat = { diffuseAlbedo, gFresnelR0, shininess };
 	float3 shadowFactor = 1.0f;
-	Light gLights[MaxLights];
 	float4 directLight = ComputeLighting(gLights, mat, input.PosW,
 		input.NormalW, toEyeW, shadowFactor);
 

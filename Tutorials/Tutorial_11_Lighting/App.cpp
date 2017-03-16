@@ -27,6 +27,16 @@ struct Vertex
 	DirectX::XMFLOAT3 Normal;
 };
 
+struct LightInfo
+{
+    Vector3f Strength = { 0.5f, 0.5f, 0.5f };
+    FScalar FalloffStart = 1.0f;                // point/spot light only
+    Vector3f Direction = { 0.0f, -1.0f, 0.0f }; // directional/spot light only
+    FScalar FalloffEnd = 10.0f;                 // point/spot light only
+    Vector3f Position = { 0.0f, 0.0f, 0.0f };   // point/spot light only
+    FScalar SpotPower = 64.0f;                  // spot light only
+};
+
 class App : public RenderApplication
 {
 public:
@@ -44,6 +54,7 @@ public:
 protected:
 	MaterialPtr				m_pMaterial;
 	GeometryPtr				m_pGeometry;
+	LightInfo				m_Lights[3];
 };
 
 //--------------------------------------------------------------------------------
@@ -52,7 +63,14 @@ App AppInstance; // Provides an instance of the application
 
 App::App()
 {
+	m_Lights[0].Direction = { 0.57735f, -0.57735f, 0.57735f };
+	m_Lights[0].Strength = { 0.8f, 0.8f, 0.8f };
+	m_Lights[1].Direction = { -0.57735f, -0.57735f, 0.57735f };
+	m_Lights[1].Strength = { 0.4f, 0.4f, 0.4f };
+	m_Lights[2].Direction = { 0.0f, -0.707f, -0.707f };
+	m_Lights[2].Strength = { 0.2f, 0.2f, 0.2f };
 }
+
 bool App::ConfigureEngineComponents()
 {
 	if (!ConfigureRenderingEngineComponents(640, 480, D3D_FEATURE_LEVEL_11_1, D3D_DRIVER_TYPE_HARDWARE))
@@ -209,9 +227,10 @@ void App::Initialize()
 	pEntity->Transform.Position() = Vector3f(0.0f, 0.0f, 0.0f);
 
 	// Lazy updated in ExecuteTask
-	pEntity->Parameters.SetVectorParameter( L"gFresnelR0_Roughness", { 0.001f, 0.001f, 0.001f, 0.f } );
+	pEntity->Parameters.SetVectorParameter( L"gFresnelR0", { 0.001f, 0.001f, 0.001f, 0.f } );
     pEntity->Parameters.SetVectorParameter( L"gAmbientLight", { 0.25f, 0.25f, 0.35f, 1.0f } );
 	pEntity->Parameters.SetVectorParameter( L"gDiffuseAlbedo", { 1.f, 1.f, 1.f, 1.f } );
+	pEntity->Parameters.SetScalarParameter( L"gRoughness", 0.1f );
 	
 	auto actor = new Actor();
 	actor->GetNode()->AttachChild(pEntity);
@@ -221,6 +240,7 @@ void App::Initialize()
 	// Parameters are updated in InitRenderParams for all thread slot
     Vector4f cameraPos( m_pScene->GetRoot()->Transform.Position(), 1.0f );
     m_pScene->Parameters.SetVectorParameter( L"gEyePosW", cameraPos );
+	m_pScene->Parameters.SetStructArrayParameter( L"gLights", sizeof(LightInfo), 3, m_Lights );
 }
 
 void App::Update()
