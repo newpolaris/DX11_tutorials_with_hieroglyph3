@@ -120,38 +120,15 @@ std::wstring App::GetName()
 	return( std::wstring( L"TexturedCube" ) );
 }
 
-void App::Initialize()
+// Luna's intro 3d book's polygon file loader
+GeometryPtr loadIntro3DPolygonFile( std::wstring filename )
 {
-	m_pRenderer11->MultiThreadingConfig.SetConfiguration(false);
-
-	// Create the camera, and the render view that will produce an image of the 
-	// from the camera's point of view of the scene.
-	m_pCamera->Spatial().SetRotation(Vector3f(0.5f, 0.3f, 0.0f));
-	m_pCamera->Spatial().SetTranslation(Vector3f(-3.0f, 12.0f, -15.0f));
-
-	auto pEffect = new RenderEffectDX11();
-	pEffect->SetVertexShader(m_pRenderer11->LoadShader(VERTEX_SHADER,
-		std::wstring(L"Lighting.hlsl"),
-		std::wstring(L"VSMAIN"),
-		std::wstring(L"vs_5_0"),
-		true));
-
-	pEffect->SetPixelShader(m_pRenderer11->LoadShader(PIXEL_SHADER,
-		std::wstring(L"Lighting.hlsl"),
-		std::wstring(L"PSMAIN"),
-		std::wstring(L"ps_5_0"),
-		true));
-
-	// method 1: create a triangle from scratch
-	// create the geometry (one triangle)
-	m_pGeometry = GeometryPtr(new GeometryDX11());
-	if (m_pGeometry == NULL) {
+	GeometryPtr MeshPtr = GeometryPtr(new GeometryDX11());
+	if (MeshPtr == NULL) {
 		EventManager::Get()->ProcessEvent(EvtErrorMessagePtr(new EvtErrorMessage(std::wstring(
 			L"Attempted to create a triangle on null geometry object."))));
-		return;
+		return MeshPtr;
 	}
-
-	std::wstring filename = L"skull.txt";
 
 	// Get the file path to the models
 	FileSystem fs;
@@ -205,15 +182,43 @@ void App::Initialize()
 	fin >> ignore;
 	fin >> ignore;
 
-	m_pGeometry->AddElement(vPos);
-	m_pGeometry->AddElement(vNorm);
+	MeshPtr->AddElement(vPos);
+	MeshPtr->AddElement(vNorm);
 
 	UINT a, b, c;
 	for (UINT i = 0; i < tcount; i++) {
 		fin >> a >> b >> c;
-		m_pGeometry->AddFace({ a, b, c });
+		MeshPtr->AddFace({ a, b, c });
 	}
 	fin.close();
+
+	// Return to caller
+	return MeshPtr;
+}
+
+void App::Initialize()
+{
+	m_pRenderer11->MultiThreadingConfig.SetConfiguration(false);
+
+	// Create the camera, and the render view that will produce an image of the 
+	// from the camera's point of view of the scene.
+	m_pCamera->Spatial().SetRotation(Vector3f(0.5f, 0.3f, 0.0f));
+	m_pCamera->Spatial().SetTranslation(Vector3f(-3.0f, 12.0f, -15.0f));
+
+	auto pEffect = new RenderEffectDX11();
+	pEffect->SetVertexShader(m_pRenderer11->LoadShader(VERTEX_SHADER,
+		std::wstring(L"Lighting.hlsl"),
+		std::wstring(L"VSMAIN"),
+		std::wstring(L"vs_5_0"),
+		true));
+
+	pEffect->SetPixelShader(m_pRenderer11->LoadShader(PIXEL_SHADER,
+		std::wstring(L"Lighting.hlsl"),
+		std::wstring(L"PSMAIN"),
+		std::wstring(L"ps_5_0"),
+		true));
+
+	m_pGeometry = loadIntro3DPolygonFile( L"skull.txt" );
 	m_pGeometry->GenerateInputLayout(pEffect->GetVertexShader());
 	m_pGeometry->LoadToBuffers();
 
